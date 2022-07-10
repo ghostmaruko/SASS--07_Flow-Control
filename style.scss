@@ -1,0 +1,95 @@
+@use 'convert';
+@use 'font-size';
+
+$color-blue: blue;
+$color-green: green;
+$color-red: red;
+
+%common-style {
+    color: $color-green;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+@mixin article-card($color, $border, $font-size) {
+    color: $color;
+    border: $border;
+    font-size: $font-size
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid red;
+    padding: convert.toRem(10);
+    gap: convert.toRem(10);
+
+    & h1 {
+        @extend %common-style;
+        text-decoration: underline $color-blue;
+        text-underline-offset: convert.toRem(8);
+    }
+
+    & h2 {
+        @extend %common-style;
+        padding: 1rem;
+        border: convert.toRem(1) solid $color-red;
+    }
+
+    & section {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+article {
+    @include article-card($color-green, convert.toRem(1) solid $color-green, 1rem)
+}
+
+article:nth-of-type(odd) {
+    @include article-card($color-blue, convert.toRem(1) solid $color-green, 1rem)
+}
+
+section:last-of-type article {
+    @include article-card($color-green, convert.toRem(1) solid $color-blue, convert.toRem(24))
+}
+
+div section article p {
+    padding: convert.toRem(10);
+    justify-content: center;
+    text-align: center;
+}
+
+section:nth-last-of-type(2) {
+    min-width: 100%;
+    justify-content: space-between;
+
+    div {
+        width: convert.toRem(45);
+        height: convert.toRem(45);
+        justify-items: flex-start;
+    }
+}
+
+$font-size: 1rem, 2rem, 3rem;
+
+@each $rem in $font-size {
+    .fs-#{$rem} {
+        font-size: $rem;
+    }
+}
+
+section:nth-of-type(2) div {
+    @for $i from 1 through 19 {
+        &:nth-child(#{$i}) {
+            background: darken($color: #fff, $amount: $i * 5%);
+            color: lighten($color: #000, $amount: $i * 5%);
+        }
+
+        &:nth-child(10) {
+            background-color: $color-blue;
+            color: $color-red;
+        }
+    }
+}
